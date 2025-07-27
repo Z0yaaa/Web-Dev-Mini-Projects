@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scroll Animation</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+        * {
+        box-sizing: border-box;
+        }
+
+        body {
+        background-color: #010115;
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        overflow-x: hidden;
+        }
+
+        body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 500%;
+        height: 600%;
+        opacity: 2;
+        z-index: -1;
+        }
+
+        h1 {
+        margin: 50px; 
+        font-family: 'Roboto', sans-serif; 
+        font-weight: 300;
+        font-size: 30px;
+        color: #ffffff73;
+        text-shadow: 0 0 5px #efefe9b3, 0 0 5px #070318, 0 0 5px #ffffff;
+        text-align: center;
+        letter-spacing: 1px;
+        transition: 3s ease;
+        }
+
+        .box {
+        background-color: hwb(249 4% 74% / 0.741), ;
+        color: hsla(0, 0%, 100%, 0.677);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 400px;
+        height: 200px;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 2px 4px 5px rgba(255, 255, 255, 0.71);
+        transform: translateX(800%);
+        transition: transform 0.8s ease;
+        }
+
+        .box:nth-of-type(even) {
+        transform: translateX(-800%);
+        }
+
+        .box.show {
+        transform: translateX(0);
+        }
+
+        .box h4 {
+        font-size: 20px;
+        font-weight: 500;
+        text-align: center;
+        }
+
+        #stars {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100vw;
+        height: 100vh;
+        }
+
+        .header {
+        width: 100%;
+        overflow: hidden;
+        padding: 2rem 0;
+        position: relative;
+        }
+
+        .scroll-text {
+        display: inline-block;
+        white-space: nowrap;
+        position: relative;
+        animation: scroll-right 8s linear infinite;
+        }
+
+        @keyframes scroll-right {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(270%);
+        }
+        }
+        
+    </style>
+
+
+  </head>
+  <body>
+    <div class="header">
+        <h1 class="scroll-text">Mysterious Facts About the Universe</h1>
+    </div>
+    <div class="box"><h4>The Universe Has No Center</h4></div>
+    <div class="box"><h4>90% of the Universe Is Invisible</h4></div>
+    <div class="box"><h4>Neutron Stars Are Mind-Bendingly Dense</h4></div>
+    <div class="box"><h4>Time Moves Slower Near Black Holes</h4></div>
+    <div class="box"><h4>There’s a Giant Cold Spot in Space</h4></div>
+    <div class="box"><h4>The Universe Might Be Infinite</h4></div>
+    <div class="box"><h4>Galaxies Can Collide – And We're Next</h4></div>
+    <div class="box"><h4>There May Be More Dimensions</h4></div>
+    <div class="box"><h4>Black Holes Can Evaporate</h4></div>
+    <div class="box"><h4>You’re Made of Star Dust</h4></div>
+    <div class="box"><h4>Space Isn’t Completely Silent</h4></div>
+    <div class="box"><h4>A Day on Venus Is Longer Than Its Year</h4></div>
+    <div class="box"><h4>Cosmic Inflation Happened in a Fraction of a Second</h4></div>
+    <div class="box"><h4>The Universe Is Still Expanding</h4></div>
+    <div class="box"><h4>You Can See the Past Through Telescopes</h4></div>
+    <div class="box"><h4>There May Be Infinite Universes</h4></div>
+    <div class="box"><h4>Time Slows Down Near a Black Hole</h4></div>
+    <div class="box"><h4>Some Stars Are Older Than the Universe</h4></div>
+    <div class="box"><h4>The Moon Is Moving Away From Earth</h4></div>
+
+    <canvas id="stars"></canvas>
+
+    <script>
+        const boxes = document.querySelectorAll('.box')
+
+        window.addEventListener('scroll', checkBoxes)
+
+        checkBoxes()
+
+        function checkBoxes() {
+            const triggerBottom = window.innerHeight / 5 * 4
+
+            boxes.forEach(box => {
+                const boxTop = box.getBoundingClientRect().top
+
+                if(boxTop < triggerBottom) {
+                    box.classList.add('show')
+                } else {
+                    box.classList.remove('show')
+                }
+            })
+        }
+
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let stars = [];
+
+        for (let i = 0; i < 200; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5,
+            alpha: Math.random(),
+            dx: Math.random() * 0.05,
+          });
+        }
+
+        function drawStars() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          stars.forEach(star => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+            ctx.fill();
+
+            star.alpha += star.dx;
+            if (star.alpha <= 0 || star.alpha >= 1) {
+              star.dx = -star.dx;
+            }
+          });
+          requestAnimationFrame(drawStars);
+        }
+
+        drawStars();
+    </script>
+  </body>
+</html>
