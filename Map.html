@@ -124,14 +124,24 @@
         }
         
         .letter {
-            color: white;
+            background: linear-gradient(to right, #FF671F, #FFFFFF, #046A38);
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 3rem;
             font-size: 56px;
             font-weight: bold;
             font-family: Arial, sans-serif;
             opacity: 0;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
         }
         
+        span {
+            background: linear-gradient(to right, #FF671F, #FFFFFF, #046A38);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .man-container {
             position: absolute;
             width: 50px;
@@ -196,7 +206,7 @@
             position: absolute;
             width: 14px;
             height: 25px;
-            background-color: white;
+            background-color: rgba(23, 120, 30, 0.527);
             border-radius: 5px;
             top: 10px;
             left: 18px;
@@ -244,11 +254,11 @@
             position: absolute;
             width: 5px;
             height: 30px;
-            background-color: #ff3366;
+            background-color: #4393269b;
             border-radius: 2px;
             top: 35px;
             transform-origin: top center;
-            box-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+            box-shadow: 0 0 8px rgba(51, 255, 71, 0.158);
         }
         
         .left-leg {
@@ -344,6 +354,7 @@
         
         /* Map Container */
         .map-container {
+            background: linear-gradient(to right, #FF671F, #FFFFFF, #046A38);
             width: 90%;
             height: 75%;
             border-radius: 8px;
@@ -512,7 +523,7 @@
         <!-- Interactive Map Section - NOW AT TOP -->
         <div class="map-section">
             <div class="visual-demo">
-                <h1 class="title">INTERACTIVE INDIA MAP</h1>
+                <h1 class="title">INTERACTIVE <span>INDIA</span> MAP</h1>
                 <div class="map-container">
                     <div class="map-wrapper">
                         <svg class="india-map" xmlns:mapsvg="http://mapsvg.com" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.1" id="svg2" mapsvg:geoViewBox="68.184010 37.084109 97.418146 6.753659" preserveAspectRatio="xMidYMid meet" viewBox="0 0 611.85999 695.70178">
