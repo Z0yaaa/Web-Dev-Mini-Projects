@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List</title>
+  <link href="https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Light.css" rel="stylesheet">
+
+  <style>
+    * {
+      font-family: 'Gilroy', sans-serif;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to right, #ffe6f0, #fff0f5);
+    }
+
+    .container {
+      padding: 40px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      max-height: 90vh;
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 1000;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .btn {
+      padding: 10px 30px;
+      background-color: #e99bba;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #e985ad;
+    }
+
+    .task-list {
+      width: 100%;
+      max-height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 5px;
+    }
+
+    .task-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .task-list::-webkit-scrollbar-thumb {
+      background-color: #e985ad;
+      border-radius: 10px;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .task {
+      flex: 1;
+      padding: 10px 10px 10px 40px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .task::before {
+      content: '';
+      position: absolute;
+      top: 9px;
+      left: 10px;
+      width: 20px;
+      height: 20px;
+      border: #333 solid 1px;
+      background-color: #ffffff;
+      border-radius: 2px;
+    }
+
+    .task.checked::before {
+      content: '✓';
+      color: green;
+      font-weight: bold;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .task.checked {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .delete {
+      padding: 10px 15px;
+      background-color: #e99bba;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .delete:hover {
+      background-color: #e985ad;
+    }
+
+    .bow {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 100px;
+      animation: tilt 2s infinite ease-in-out;
+      transform-origin: center;
+      z-index: 1000;
+    }
+
+    @keyframes tilt {
+      0% { transform: rotate(-40deg); }
+      50% { transform: rotate(10deg); }
+      100% { transform: rotate(-40deg); }
+    }
+  </style>
+</head>
+<body>
+  <img src="images/bow.png" alt="Bow" class="bow" />
+
+  <div class="container">
+    <h1>Howdy, Here is your Task for today</h1>
+
+    <div class="input-container">
+      <input type="text" placeholder="Enter your task here" id="input" />
+      <button class="btn" id="addBtn">Add</button>
+    </div>
+
+    <div class="task-list" id="taskList"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById("input");
+    const addBtn = document.getElementById("addBtn");
+    const taskList = document.getElementById("taskList");
+
+    addBtn.addEventListener("click", () => {
+      const taskText = input.value.trim();
+      if (taskText === "") return;
+
+      const taskRow = document.createElement("div");
+      taskRow.classList.add("task-row");
+
+      const task = document.createElement("div");
+      task.classList.add("task");
+      task.textContent = taskText;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Remove";
+      delBtn.classList.add("delete");
+
+      task.addEventListener("click", () => {
+        task.classList.toggle("checked");
+      });
+
+      delBtn.addEventListener("click", () => {
+        taskRow.remove();
+      });
+
+      taskRow.appendChild(task);
+      taskRow.appendChild(delBtn);
+      taskList.appendChild(taskRow);
+
+      input.value = "";
+    });
+  </script>
+</body>
+</html>
