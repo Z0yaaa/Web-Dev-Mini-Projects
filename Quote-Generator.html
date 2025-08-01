@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nature Quote Generator</title>
+  <link href="https://cdn.jsdelivr.net/gh/repalash/gilroy-free-webfont@fonts/Gilroy-Light.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      cursor: url('https://cur.cursors-4u.net/nature/nat-10/nat967.cur'), auto;
+      font-family: 'Inter', sans-serif;
+      color: #ffffff;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1rem;
+    }
+
+    .quote-container {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      height: 250px;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .quote-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 2rem;
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: -100%;
+      transition: all 0.6s ease-in-out;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      color: #2f5b37;
+    }
+
+    .quote-card.show {
+      left: 0;
+    }
+
+    .quote-card h2 {
+      font-family: 'Gilroy', serif;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .icons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .icons span {
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s, color 0.3s;
+    }
+
+    .icons span:hover {
+      transform: scale(1.2);
+    }
+
+    .star {
+      color: #ffffffcc;
+    }
+
+    .star.filled {
+      color: #2e8b57;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #3cb371;
+      transform: scale(1.05);
+    }
+
+    .favorites-box {
+      margin-top: 2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 1rem;
+      max-width: 700px;
+      width: 90%;
+      color: #e5ffe5;
+      overflow-y: auto;
+      max-height: 180px;
+    }
+
+    .favorites-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      padding-left: 1rem;
+    }
+
+    li {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fav-remove {
+      font-size: 1rem;
+      color: #ff9999;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    .fav-remove:hover {
+      color: #ff4d4d;
+      transform: scale(1.2);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ffffff44;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quote-container" id="quoteContainer"></div>
+  <button onclick="generateQuote()">Whisper a Quote</button>
+
+  <div class="favorites-box">
+    <div class="favorites-title">Favorites:</div>
+    <ul id="favoritesList"></ul>
+  </div>
+
+  <script>
+    const quotes = [
+      "Look deep into nature, and then you will understand everything better. – Albert Einstein",
+      "The Earth has music for those who listen. – William Shakespeare",
+      "Adopt the pace of nature: her secret is patience. – Ralph Waldo Emerson",
+      "In every walk with nature one receives far more than he seeks. – John Muir",
+      "Heaven is under our feet as well as over our heads. – Henry David Thoreau",
+      "Nature does not hurry, yet everything is accomplished. – Lao Tzu",
+      "Choose only one master—nature. – Rembrandt",
+      "Time spent amongst trees is never wasted time. – Katrina Mayer",
+      "To forget how to dig the earth and to tend the soil is to forget ourselves. – Mahatma Gandhi",
+      "The poetry of the earth is never dead. – John Keats",
+      "The clearest way into the Universe is through a forest wilderness. – John Muir",
+      "Just living is not enough... one must have sunshine, freedom, and a little flower. – Hans Christian Andersen",
+      "A walk in nature walks the soul back home. – Mary Davis",
+      "Nature always wears the colors of the spirit. – Ralph Waldo Emerson",
+      "Live in each season as it passes; breathe the air, drink the drink, taste the fruit. – Henry David Thoreau",
+      "Those who contemplate the beauty of the earth find reserves of strength. – Rachel Carson",
+      "Green is the prime color of the world, and that from which its loveliness arises. – Pedro Calderon de la Barca",
+      "Trees are poems that the earth writes upon the sky. – Khalil Gibran",
+      "Wilderness is not a luxury but a necessity of the human spirit. – Edward Abbey",
+      "If you truly love nature, you will find beauty everywhere. – Vincent Van Gogh"
+    ];
+
+    let currentQuote = '';
+    const quoteContainer = document.getElementById('quoteContainer');
+    const favoritesList = document.getElementById('favoritesList');
+
+    function generateQuote() {
+      const index = Math.floor(Math.random() * quotes.length);
+      currentQuote = quotes[index];
+
+      const card = document.createElement('div');
+      card.classList.add('quote-card');
+
+      const quoteText = document.createElement('h2');
+      quoteText.textContent = currentQuote;
+
+      const star = document.createElement('span');
+      star.classList.add('star');
+      star.textContent = isFavorite(currentQuote) ? '★' : '☆';
+      if (isFavorite(currentQuote)) star.classList.add('filled');
+
+      const iconDiv = document.createElement('div');
+      iconDiv.classList.add('icons');
+      iconDiv.appendChild(star);
+
+      card.appendChild(quoteText);
+      card.appendChild(iconDiv);
+      quoteContainer.innerHTML = '';
+      quoteContainer.appendChild(card);
+
+      requestAnimationFrame(() => {
+        card.classList.add('show');
+      });
+
+      star.addEventListener('click', () => {
+        toggleFavorite(currentQuote);
+        star.textContent = isFavorite(currentQuote) ? '★' : '☆';
+        star.classList.toggle('filled');
+        updateFavoritesList();
+      });
+    }
+
+    function toggleFavorite(quote) {
+      let favs = JSON.parse(localStorage.getItem('favoriteQuotes')) || [];
+      const i = favs.indexOf(quote);
+      if (i === -1) {
+        favs.push(quote);
+      } else {
+        favs.splice(i, 1);
+      }
+      localStorage.setItem('favoriteQuotes', JSON.stringify(favs));
+    }
+
+    function removeFavorite(quote) {
+      let favs = JSON.parse(localStorage.getItem('favoriteQuotes')) || [];
+      const i = favs.indexOf(quote);
+      if (i !== -1) {
+        favs.splice(i, 1);
+        localStorage.setItem('favoriteQuotes', JSON.stringify(favs));
+      }
+    }
+
+    function isFavorite(quote) {
+      const favs = JSON.parse(localStorage.getItem('favoriteQuotes')) || [];
+      return favs.includes(quote);
+    }
+
+    function updateFavoritesList() {
+      const favs = JSON.parse(localStorage.getItem('favoriteQuotes')) || [];
+      favoritesList.innerHTML = '';
+      favs.forEach(q => {
+        const li = document.createElement('li');
+        li.textContent = q;
+
+        const removeBtn = document.createElement('span');
+        removeBtn.classList.add('fav-remove');
+        removeBtn.textContent = '×';
+        removeBtn.title = 'Remove from favorites';
+        removeBtn.addEventListener('click', () => {
+          removeFavorite(q);
+          updateFavoritesList();
+        });
+
+        li.appendChild(removeBtn);
+        favoritesList.appendChild(li);
+      });
+    }
+
+    updateFavoritesList();
+  </script>
+</body>
+</html>
